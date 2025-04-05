@@ -11,7 +11,7 @@
       };
 
       typescript = {
-        path = ./typescript/;
+        path = ./typescript;
         description = "A template installing node,typescript and common dependencies";
         welcomeText = ''
           # Getting Started
