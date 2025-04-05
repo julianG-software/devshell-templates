@@ -1,17 +1,31 @@
 {
-  description = "A very basic flake";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
   outputs =
-    { self, nixpkgs }:
-    {
+    inputs:
+    inputs.flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = (import (inputs.nixpkgs) { inherit system; });
+      in
+      {
+        devShell = pkgs.mkShell {
+          packages = with pkgs; [
+            #install packages
+          ];
 
-      packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+          #install dependencies form other packages
+          #inputsFrom = [];
 
-      packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
-    };
+          shellHook = ''
+            exec zsh
+          '';
+          # Any Value not known to mkshell will set a env valiable
+          #EXAMPLEVAR1 = "Example Val 1";
+        };
+      }
+    );
 }
